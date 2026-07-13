@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# unused source clips (not referenced by the site)
+/public/Water_ripples_and_anchor_glints_*.mp4
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

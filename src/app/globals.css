@@ -1,26 +1,639 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+  Ogen Capital design tokens.
+  Single locked dark theme (brief: dark, luxurious, restrained).
+  Palette drawn from the brand logo: deep forest green + antique gold + bone.
+  Shape rule: interactive controls are pills (rounded-full), elevated
+  surfaces use a soft 2rem radius, inputs inside dense forms use 0.75rem,
+  and major color-block sections curve their top edge (rounded-t-[3rem]).
+*/
+@theme {
+  /* Dark family — enriched toward the logo's true emerald green. */
+  --color-ink: #06180f; /* page background, deep emerald-black */
+  --color-ink-2: #0c2418; /* elevated surface */
+  --color-ink-3: #103122; /* deepest accent surface, true forest */
+  --color-forest: #16593a; /* lit emerald, from the logo ground */
+  --color-bone: #ede7d9; /* primary text on dark */
+  --color-bone-dim: #a3ab9e; /* secondary text on dark */
+
+  /* Light family — warm ivory/parchment for the airy sections. */
+  --color-ivory: #f4efe3; /* light section background */
+  --color-parchment: #ebe1cd; /* elevated light surface / cards */
+  --color-green-ink: #0d2a1c; /* primary text on light */
+  --color-green-ink-dim: #566056; /* secondary text on light */
+
+  /* Gold — shared accent across both grounds. */
+  --color-gold: #c9a45c; /* primary accent: numbers, CTAs */
+  --color-gold-bright: #e3c07e; /* accent highlight (hover, emphasis) */
+  --color-gold-deep: #9c7f45; /* accent on hover / borders */
+  --color-gold-ink: #7d5c26; /* gold that stays legible on ivory */
+  --color-aqua: #3fe0b0; /* electric secondary accent, used sparingly */
+  --color-line: rgba(201, 164, 92, 0.22); /* gold hairline on dark */
+  --color-line-ink: rgba(13, 42, 28, 0.14); /* green hairline on light */
+
+  /* Motion — the single signature ease-out curve, shared with JS (lib/motion.ts). */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/*
+  Font utilities. `inline` so the utility carries the full var chain and
+  resolves against the next/font variables set on <html>.
+*/
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-frank), "Rubik", sans-serif;
+  --font-body: var(--font-heebo), "Assistant", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/*
+  Rubik is a variable-weight sans. Default display headings to 600 (semibold)
+  for presence; the hero opts up to heavier weights explicitly. Hebrew reads
+  best without extra tracking here, so leave letter-spacing normal.
+*/
+.font-display {
+  font-weight: 600;
+}
+
+/*
+  Fluid display scale (from the reference teardowns: oversized, calm type is
+  the core premium signal). Sizes scale with the viewport and clamp at both
+  ends. Line-heights stay generous — Hebrew/Suez One reads cramped at the
+  0.7–0.95 leading the Latin reference sites use, and never takes negative
+  tracking. Pair with `.font-display`.
+*/
+.text-display-1 {
+  font-size: clamp(2.75rem, 6.5vw, 5rem);
+  line-height: 1.05;
+}
+
+.text-display-2 {
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.1;
+}
+
+/*
+  Ghost display word: a giant, very low-opacity headline set behind content
+  as a texture (Tres Mares / AIG). Must sit in a `position: relative;
+  overflow-hidden` parent; it is decorative and non-interactive.
+*/
+.ghost-word {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+  font-size: clamp(8rem, 22vw, 20rem);
+  line-height: 0.9;
+  font-weight: 400;
+  white-space: nowrap;
+  user-select: none;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-ink);
+  color: var(--color-bone);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(201, 164, 92, 0.3);
+  color: #f6f1e2;
+}
+
+/*
+  Metallic gold text, for a single emphasized word in display headlines.
+  Solid-color fallback first for browsers without background-clip: text.
+*/
+.text-gilded {
+  color: var(--color-gold);
+  background: linear-gradient(
+    100deg,
+    #8f713a 0%,
+    #c9a45c 30%,
+    #f0d99c 50%,
+    #c9a45c 70%,
+    #8f713a 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+  Gold sheen sweep across primary buttons on hover.
+  Transform-only animation, gated for reduced motion.
+*/
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 248, 225, 0.55) 50%,
+    transparent 70%
+  );
+  transform: translateX(-130%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .btn-gold:hover::after {
+    transform: translateX(130%);
+    transition: transform 0.6s var(--ease-out);
+  }
+}
+
+/*
+  Trust ticker. The track holds the item list twice; translating it by
+  half its own width loops seamlessly. RTL flips the direction.
+*/
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 36s linear infinite;
+  will-change: transform;
+}
+
+[dir="rtl"] .marquee-track {
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/*
+  Static gold hairline border for the featured lead-capture band.
+  A gradient layer sits behind the content with 1px of it exposed.
+  (Previously a rotating conic gradient with an aqua stop — retired for a
+  quieter, single-accent look in line with the premium reference sites.)
+*/
+.border-glow {
+  position: relative;
+  border-radius: 2rem;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(227, 192, 126, 0.55),
+    rgba(201, 164, 92, 0.12) 42%,
+    rgba(201, 164, 92, 0.12) 58%,
+    rgba(201, 164, 92, 0.5)
+  );
+}
+
+/*
+  Cursor spotlight for dark sections. A section sets --spot-x/--spot-y
+  from pointer position; the overlay only exists for fine pointers.
+*/
+.spotlight-overlay {
+  display: none;
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .spotlight-overlay {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      560px circle at var(--spot-x, 50%) var(--spot-y, 50%),
+      rgba(201, 164, 92, 0.07),
+      transparent 65%
+    );
+  }
+}
+
+/*
+  Fine film grain for cinematic dark sections. Applied via `.grain` on a
+  positioned element; sits above the background, below the content.
+*/
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 140px 140px;
+}
+
+/*
+  Soft warm vignette for the light (ivory) sections, so a big cream block
+  gains depth at its edges instead of reading as flat paper.
+*/
+.light-vignette::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 80% at 50% -10%,
+    rgba(201, 164, 92, 0.1),
+    transparent 55%
+  );
+}
+
+/*
+  CSS-only entrance for above-the-fold hero content. Runs on render with no
+  dependency on JS/hydration, so the hero is always visible even when a browser
+  extension disrupts React hydration. `both` holds the final (visible) state.
+*/
+@keyframes fadeRise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.enter {
+  animation: fadeRise 0.8s var(--ease-out) both;
+}
+
+@keyframes growX {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.enter-rule {
+  transform-origin: left center;
+  animation: growX 0.9s var(--ease-out) both;
+}
+
+[dir="rtl"] .enter-rule {
+  transform-origin: right center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  .enter-rule {
+    animation: none;
+  }
+}
+
+/* Thin gilded metallic text that still reads on a light ivory ground. */
+.text-gilded-ink {
+  color: var(--color-gold-ink);
+  background: linear-gradient(
+    100deg,
+    #6b4f1f 0%,
+    #9c7f45 30%,
+    #c9a45c 50%,
+    #9c7f45 70%,
+    #6b4f1f 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/*
+  Soft spotlight pool — a large, soft-edged radial highlight that pools light
+  into a section: the calm "lit space" from the AIG reference the client liked.
+  Drop `.spotlight` on a relative, overflow-hidden parent (defaults to a warm
+  gold pool for the dark band); add `.spotlight--ivory` for the bright cream
+  pool on light sections. The main pool breathes (scale + opacity) and a
+  second, offset pool drifts, so the light feels alive without moving objects.
+  Transform/opacity only; reduced-motion-safe.
+*/
+.spotlight {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.spotlight::before,
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+}
+
+.spotlight::before {
+  background: radial-gradient(
+    42% 42% at 50% 20%,
+    rgba(201, 164, 92, 0.26),
+    transparent 70%
+  );
+  animation: spot-breathe 13s ease-in-out infinite;
+}
+
+.spotlight::after {
+  background: radial-gradient(
+    36% 36% at 82% 88%,
+    rgba(227, 192, 126, 0.16),
+    transparent 70%
+  );
+  animation: spot-drift 28s ease-in-out infinite;
+}
+
+.spotlight--ivory::before {
+  background: radial-gradient(
+    44% 44% at 28% 12%,
+    rgba(255, 251, 242, 0.95),
+    transparent 68%
+  );
+}
+
+.spotlight--ivory::after {
+  background: radial-gradient(
+    40% 40% at 84% 86%,
+    rgba(201, 164, 92, 0.14),
+    transparent 70%
+  );
+}
+
+@keyframes spot-breathe {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes spot-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-4%, -3%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotlight::before,
+  .spotlight::after {
+    animation: none;
+  }
+}
+
+/*
+  Principle card — a frosted parchment tile with a gold blob drifting slowly
+  behind the content, echoing the reference card the client liked but retuned
+  to the single gold accent. Soft warm shadow on the ivory ground; the card
+  lifts and the blob quickens on hover. Motion is transform-only and
+  reduced-motion-safe. `overflow: hidden` keeps the glow inside the tile.
+*/
+.p-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: rgba(235, 225, 205, 0.55);
+  border: 1px solid var(--color-line-ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 30px 55px -32px rgba(13, 42, 28, 0.45);
+  transition:
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out);
+}
+
+/* Hover lift only where a real pointer can hover — a tap must not trigger it. */
+@media (hover: hover) and (pointer: fine) {
+  .p-card:hover {
+    transform: translateY(-8px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      0 44px 72px -34px rgba(13, 42, 28, 0.5);
+  }
+}
+
+.p-card__blob {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  inset-inline-start: 0;
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201, 164, 92, 0.5), transparent 70%);
+  filter: blur(20px);
+  animation: blob-drift 14s ease-in-out infinite;
+}
+
+.p-card:hover .p-card__blob {
+  animation-duration: 8s;
+}
+
+.p-card__body {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes blob-drift {
+  0% {
+    transform: translate(-40%, -40%);
+  }
+  25% {
+    transform: translate(90%, -30%);
+  }
+  50% {
+    transform: translate(80%, 90%);
+  }
+  75% {
+    transform: translate(-30%, 80%);
+  }
+  100% {
+    transform: translate(-40%, -40%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .p-card__blob {
+    animation: none;
+  }
+  /* Keep the shadow feedback but drop the positional lift. */
+  .p-card:hover {
+    transform: none;
+  }
+}
+
+/*
+  Golden rain — slow vertical streaks of light drifting downward, adapted from
+  the CSS-rain reference the client shared but retuned to the single gold accent
+  and softened to match the calm, glowing background photo they liked. Two
+  parallax layers (a slow, blurred far field and a quicker near field) give
+  depth; the layer masks fade the streaks out at the top and bottom edges so the
+  rain reads as one continuous fall across the green→ivory seam. Decorative:
+  drop `.rain` on an aria-hidden, absolutely-positioned element behind content.
+  Background-position animation only — no JS, reduced-motion-safe.
+
+  Colorway is set per-section by overriding --rain (streak color). Default is
+  the gold-on-forest variant used by the dark stats band; `.rain--ivory` re-tunes
+  it to a whisper of gold on the light parchment section.
+*/
+.rain {
+  --rain: rgba(227, 192, 126, 0.7);
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 14%,
+    #000 80%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 14%,
+    #000 80%,
+    transparent
+  );
+}
+
+/* Far field: sparser, larger tile, more diffuse, slow. The layer is one tile
+   taller than the section and is translated down by exactly that tile height,
+   so the repeating pattern loops seamlessly on the GPU (transform, not paint). */
+.rain::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -920px;
+  height: calc(100% + 920px);
+  opacity: 0.34;
+  will-change: transform;
+  background-repeat: repeat;
+  background-image:
+    radial-gradient(3px 130px at 40px 120px, var(--rain), transparent),
+    radial-gradient(3px 130px at 250px 520px, var(--rain), transparent),
+    radial-gradient(3px 130px at 160px 780px, var(--rain), transparent),
+    radial-gradient(3px 130px at 300px 300px, var(--rain), transparent),
+    radial-gradient(2px 2px at 120px 650px, var(--rain) 100%, transparent 160%);
+  background-size: 340px 920px;
+  animation: rain-far 30s linear infinite;
+}
+
+/* Near field: denser, smaller tile, crisper, quicker. Same taller-layer +
+   translate technique as the far field. */
+.rain::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -640px;
+  height: calc(100% + 640px);
+  opacity: 0.5;
+  will-change: transform;
+  background-repeat: repeat;
+  background-image:
+    radial-gradient(2px 90px at 20px 60px, var(--rain), transparent),
+    radial-gradient(2px 90px at 110px 300px, var(--rain), transparent),
+    radial-gradient(2px 90px at 180px 140px, var(--rain), transparent),
+    radial-gradient(2px 90px at 70px 460px, var(--rain), transparent),
+    radial-gradient(2px 90px at 150px 560px, var(--rain), transparent),
+    radial-gradient(1.5px 1.5px at 95px 200px, var(--rain) 100%, transparent 160%),
+    radial-gradient(1.5px 1.5px at 200px 400px, var(--rain) 100%, transparent 160%);
+  background-size: 220px 640px;
+  animation: rain-near 17s linear infinite;
+}
+
+/* Light section: gold is barely there, so it warms the parchment without dirtying it. */
+.rain--ivory {
+  --rain: rgba(157, 127, 69, 0.42);
+}
+
+.rain--ivory::before {
+  opacity: 0.3;
+}
+
+.rain--ivory::after {
+  opacity: 0.4;
+}
+
+@keyframes rain-far {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 920px, 0);
+  }
+}
+
+@keyframes rain-near {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 640px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rain::before,
+  .rain::after {
+    animation: none;
+  }
+}
+
+/*
+  FAQ smooth expand/collapse on native <details>. Progressive enhancement:
+  browsers that support ::details-content + interpolate-size animate the answer
+  open; the rest snap (the prior, still-correct behavior). Keeps the native
+  element's accessibility and no-JS operation.
+*/
+.faq-item::details-content {
+  block-size: 0;
+  opacity: 0;
+  overflow: hidden;
+  interpolate-size: allow-keywords;
+  transition:
+    block-size 0.3s var(--ease-out),
+    opacity 0.3s var(--ease-out),
+    content-visibility 0.3s allow-discrete;
+}
+
+.faq-item[open]::details-content {
+  block-size: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item::details-content {
+    transition: none;
+  }
 }
