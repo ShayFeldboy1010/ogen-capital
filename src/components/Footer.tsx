@@ -12,10 +12,14 @@ export function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
     { href: base, label: t.nav.home },
     { href: `${base}/about`, label: t.nav.about },
     { href: `${base}/services`, label: t.nav.services },
-    { href: `${base}/results`, label: t.nav.results },
-    { href: `${base}/trust`, label: t.nav.trust },
     { href: `${base}/faq`, label: t.nav.faq },
     { href: `${base}/contact`, label: t.nav.contact },
+  ];
+
+  const legalLinks = [
+    { href: `${base}/legal/disclaimer`, label: t.footer.disclaimerLink },
+    { href: `${base}/legal/investor-rights`, label: t.footer.rightsLink },
+    { href: `${base}/legal/privacy`, label: t.footer.privacyLink },
   ];
 
   return (
@@ -26,9 +30,9 @@ export function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
             <Image
               src="/mark.png"
               alt=""
-              width={745}
-              height={650}
-              className="h-12 w-auto"
+              width={594}
+              height={636}
+              className="h-16 w-auto"
             />
             <p className="mt-4 font-display text-2xl text-gold">
               {t.footer.brandLine}
@@ -57,22 +61,16 @@ export function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
           <div>
             <p className="text-sm font-semibold text-bone">{t.footer.legalTitle}</p>
             <ul className="mt-4 space-y-2.5">
-              <li>
-                <Link
-                  href={`${base}/legal/disclaimer`}
-                  className="text-sm text-bone-dim transition-colors hover:text-gold"
-                >
-                  {t.footer.disclaimerLink}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={`${base}/legal/investor-rights`}
-                  className="text-sm text-bone-dim transition-colors hover:text-gold"
-                >
-                  {t.footer.rightsLink}
-                </Link>
-              </li>
+              {legalLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-bone-dim transition-colors hover:text-gold"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

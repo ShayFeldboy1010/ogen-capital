@@ -18,7 +18,9 @@ export function TrustTicker({ items }: { items: readonly string[] }) {
                 key={item}
                 className="flex items-center whitespace-nowrap text-sm text-bone-dim"
               >
-                <span className="mx-6 inline-block h-1.5 w-1.5 rotate-45 bg-gold/60" />
+                {/* A quiet dot, not a repeating diamond — the rotated squares
+                    read as a triangle pattern across the band (spec section 7). */}
+                <span className="mx-6 inline-block h-1 w-1 rounded-full bg-gold/50" />
                 {item}
               </span>
             ))}

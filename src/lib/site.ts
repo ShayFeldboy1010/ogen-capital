@@ -3,18 +3,14 @@
  * Everything a non-developer may need to change lives here.
  */
 export const site = {
-  brand: "Ogen Capital",
+  brand: "OGen Family Office",
   domain: "https://ogen.capital",
 
-  /**
-   * TODO(client): replace with the real WhatsApp number.
-   * International format, digits only, no plus sign or dashes.
-   * Example: Israeli number 050-123-4567 becomes "972501234567".
-   */
-  whatsappNumber: "972500000000",
+  /** 055-979-9433 in international format: digits only, no plus or dashes. */
+  whatsappNumber: "972559799433",
+  phoneDisplay: "055-979-9433",
 
-  /** TODO(client): replace with the real contact email. */
-  email: "office@ogen.capital",
+  email: "privacy@ogen.capital",
 
   /**
    * Google Analytics 4 measurement ID.
@@ -23,6 +19,21 @@ export const site = {
    */
   gaId: process.env.NEXT_PUBLIC_GA_ID ?? "",
 } as const;
+
+/**
+ * Absolute base URL for metadata (share-card image, canonical URLs).
+ *
+ * ogen.capital is not pointed at the site yet, so falling straight back to it
+ * would leave the WhatsApp/social preview image 404ing on the Vercel URL.
+ * Order: explicit override, then whatever domain Vercel is serving, then the
+ * final domain.
+ */
+export function siteUrl(): string {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  return site.domain;
+}
 
 /** Builds a wa.me link, optionally with a prefilled message. */
 export function whatsappHref(message?: string): string {

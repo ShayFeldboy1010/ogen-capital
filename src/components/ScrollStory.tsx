@@ -51,7 +51,7 @@ export function ScrollStory({ t }: { t: Dictionary }) {
         if (m) {
           const on = p >= i * span && p < (i + 1) * span;
           m.style.opacity = on ? "1" : "0.28";
-          m.style.transform = `rotate(45deg) scale(${on ? 1.5 : 1})`;
+          m.style.transform = `scaleX(${on ? 2.4 : 1})`;
         }
       }
     },
@@ -141,8 +141,8 @@ export function ScrollStory({ t }: { t: Dictionary }) {
                   markerRefs.current[i] = el;
                 }}
                 aria-hidden
-                className="inline-block h-2 w-2 bg-gold transition-[opacity,transform] duration-300"
-                style={{ transform: "rotate(45deg)", opacity: i === 0 ? 1 : 0.28 }}
+                className="inline-block h-0.5 w-4 rounded-full bg-gold transition-[opacity,transform] duration-300"
+                style={{ opacity: i === 0 ? 1 : 0.28 }}
               />
             ))}
           </div>

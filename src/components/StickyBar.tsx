@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { WhatsappLogo } from "@phosphor-icons/react";
 import { motion, useReducedMotion, AnimatePresence } from "motion/react";
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { EASE_OUT } from "@/lib/motion";
 import type { Dictionary } from "@/dictionaries";
 import { whatsappHref } from "@/lib/site";
@@ -43,7 +43,7 @@ export function StickyBar({ t }: { t: Dictionary }) {
               rel="noopener noreferrer"
               className="btn-gold flex shrink-0 items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-semibold text-ink active:translate-y-px"
             >
-              <WhatsappLogo size={18} weight="fill" />
+              <WhatsAppIcon size={18} tone="brand" className="shrink-0" />
               {t.cta.stickyButton}
             </a>
           </div>

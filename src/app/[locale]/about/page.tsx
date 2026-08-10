@@ -43,20 +43,21 @@ export default async function AboutPage({
       <section className="border-t border-line">
         <div className="mx-auto max-w-6xl space-y-20 px-6 py-24 md:space-y-28 md:py-28">
           {t.about.partners.map((partner, i) => (
-            <Reveal key={partner.imageSeed}>
+            <Reveal key={partner.name}>
               <div className="grid items-center gap-10 md:grid-cols-[2fr_3fr] md:gap-16">
+                {/* Portraits are pre-composited onto one shared brand background
+                    at a matching 4:5 frame and face size (spec section 9). */}
                 <div
                   className={`relative aspect-[4/5] w-full max-w-sm overflow-hidden rounded-[2rem] border border-line bg-ink-2 ${
                     i % 2 === 1 ? "md:order-2 md:justify-self-end" : ""
                   }`}
                 >
-                  {/* TODO(client): replace with the partner's real portrait */}
                   <Image
-                    src={`https://picsum.photos/seed/${partner.imageSeed}/800/1000?grayscale`}
+                    src={partner.image}
                     alt={partner.name}
                     fill
                     sizes="(min-width: 768px) 33vw, 100vw"
-                    className="object-cover opacity-70"
+                    className="object-cover"
                   />
                 </div>
                 <div className={i % 2 === 1 ? "md:order-1" : ""}>

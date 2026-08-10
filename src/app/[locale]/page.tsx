@@ -13,7 +13,6 @@ import { TrustTicker } from "@/components/TrustTicker";
 import { Magnetic } from "@/components/Magnetic";
 import { ScrollStory } from "@/components/ScrollStory";
 import { ScrollShowcase } from "@/components/ScrollShowcase";
-import { Testimonials } from "@/components/Testimonials";
 import { whatsappHref } from "@/lib/site";
 import { hasPublicAsset } from "@/lib/assets";
 
@@ -30,7 +29,9 @@ export default async function HomePage({
 
   return (
     <>
-      {/* Hero: cinematic anchor photograph, headline over the calm water */}
+      {/* Hero: cinematic anchor photograph, headline over the calm water.
+          The anchor is scaled up around itself (spec section 7 asks for a
+          larger anchor element) without pushing it under the headline. */}
       <section className="relative flex min-h-[92dvh] items-center overflow-hidden bg-ink">
         <Image
           src="/hero-anchor.png"
@@ -38,7 +39,7 @@ export default async function HomePage({
           fill
           priority
           sizes="100vw"
-          className="hidden object-cover md:block"
+          className="hidden origin-[28%_58%] scale-[1.22] object-cover md:block"
         />
         <Image
           src="/hero-anchor-mobile.png"
@@ -46,7 +47,7 @@ export default async function HomePage({
           fill
           priority
           sizes="100vw"
-          className="object-cover md:hidden"
+          className="origin-[50%_35%] scale-110 object-cover md:hidden"
         />
         {/* Contrast veils: darken bottom, and the text (start) side */}
         <div
@@ -57,7 +58,7 @@ export default async function HomePage({
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink/90 via-ink/30 to-transparent rtl:bg-gradient-to-l"
         />
-        <GoldChart className="pointer-events-none absolute inset-x-0 bottom-0 h-40 w-full opacity-70 md:h-56" />
+        <GoldChart className="pointer-events-none absolute inset-x-0 bottom-0 h-52 w-full opacity-85 md:h-72" />
 
         <div className="relative z-10 mx-auto w-full max-w-6xl px-6 py-24">
           <div className="max-w-2xl">
@@ -208,9 +209,6 @@ export default async function HomePage({
 
       {/* Process: scroll-pinned story (dark) */}
       <ScrollStory t={t} />
-
-      {/* Testimonials: LIGHT (parchment) — bento grid */}
-      <Testimonials t={t} base={base} />
 
       {/* Closing conversion moment: lead-capture band at the foot (dark) */}
       <LeadBand t={t} />

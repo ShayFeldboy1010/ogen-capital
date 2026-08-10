@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/dictionaries";
 import { Reveal } from "@/components/Reveal";
 import { GoldRule } from "@/components/GoldRule";
 import { ContactForm } from "@/components/ContactForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
-import { whatsappHref } from "@/lib/site";
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
+import { whatsappHref, site } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -45,7 +45,7 @@ export default async function ContactPage({
         <div className="mx-auto grid max-w-6xl gap-14 px-6 py-20 md:grid-cols-[2fr_3fr] md:gap-20 md:py-24">
           <div className="space-y-12">
             <Reveal className="rounded-[2rem] border border-gold-deep/40 bg-ink-3 p-8">
-              <WhatsappLogo size={32} weight="thin" className="text-gold" />
+              <WhatsAppIcon size={34} tone="brand" />
               <h2 className="mt-5 font-display text-2xl text-bone">
                 {t.contact.directTitle}
               </h2>
@@ -56,10 +56,14 @@ export default async function ContactPage({
                 href={whatsappHref(t.cta.whatsappPrefill)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-gold mt-7 inline-block rounded-full bg-gold px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-gold-bright active:translate-y-px"
+                className="btn-gold mt-7 inline-flex items-center gap-2 rounded-full bg-gold px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:bg-gold-bright active:translate-y-px"
               >
+                <WhatsAppIcon size={18} tone="brand" className="shrink-0" />
                 {t.cta.whatsapp}
               </a>
+              <p className="mt-4 text-sm text-bone-dim" dir="ltr">
+                {site.phoneDisplay}
+              </p>
             </Reveal>
 
             <Reveal>

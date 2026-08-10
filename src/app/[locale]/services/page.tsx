@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Anchor, Scales, Handshake, TreeStructure } from "@phosphor-icons/react/dist/ssr";
+import {
+  TrendUp,
+  Receipt,
+  Scales,
+  BookOpen,
+} from "@phosphor-icons/react/dist/ssr";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/dictionaries";
 import { Reveal } from "@/components/Reveal";
@@ -16,7 +21,11 @@ export async function generateMetadata({
   return { title: getDictionary(locale).services.title };
 }
 
-const icons = [Anchor, Scales, Handshake, TreeStructure];
+/*
+ * One icon per area of guidance, in the order the spec (section 8) names them:
+ * rising graph, income tax, scales / strategy, open book.
+ */
+const icons = [TrendUp, Receipt, Scales, BookOpen];
 
 export default async function ServicesPage({
   params,
@@ -54,24 +63,13 @@ export default async function ServicesPage({
                   delay={(i % 2) * 0.08}
                   className="rounded-[2rem] border border-line bg-ink-2/60 p-8 md:p-10"
                 >
-                  <Icon size={30} className="text-gold" weight="thin" />
+                  <Icon size={34} className="text-gold" weight="thin" />
                   <h2 className="mt-6 font-display text-2xl text-bone">
                     {item.title}
                   </h2>
-                  <p className="mt-4 text-base leading-relaxed text-bone-dim">
+                  <p className="mt-4 border-t border-line pt-6 text-base leading-relaxed text-bone-dim">
                     {item.body}
                   </p>
-                  <ul className="mt-7 space-y-3 border-t border-line pt-7">
-                    {item.points.map((point) => (
-                      <li key={point} className="flex gap-3 text-sm leading-relaxed text-bone">
-                        <span
-                          aria-hidden
-                          className="mt-3 block h-px w-4 shrink-0 bg-gold"
-                        />
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
                 </Reveal>
               );
             })}

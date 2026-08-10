@@ -35,6 +35,13 @@ export default async function InvestorRightsPage({
               {t.legal.rightsIntro}
             </p>
           </Reveal>
+
+          {/* The one line the spec (section 6) asks to state critically. */}
+          <Reveal delay={0.1} className="mt-10">
+            <p className="border-s-2 border-gold ps-6 font-display text-2xl leading-snug text-gold-bright md:ps-8 md:text-3xl">
+              {t.legal.rightsHighlight}
+            </p>
+          </Reveal>
         </div>
       </section>
 

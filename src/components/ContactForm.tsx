@@ -8,20 +8,28 @@ import { whatsappHref } from "@/lib/site";
  * Contact form that converts straight into a WhatsApp conversation:
  * on submit it opens wa.me with a prefilled message built from the fields.
  * No backend, nothing stored, which is also stated to the user.
+ *
+ * Required fields per spec section 4: full name, phone, email, subject.
  */
 export function ContactForm({ t }: { t: Dictionary }) {
   const f = t.contact.form;
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [topic, setTopic] = useState(f.topics[0]);
   const [message, setMessage] = useState("");
-  const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
+  const [errors, setErrors] = useState<{
+    name?: string;
+    phone?: string;
+    email?: string;
+  }>({});
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     const next: typeof errors = {};
     if (name.trim().length < 2) next.name = f.errors.name;
     if (!/^[\d+\-\s()]{7,}$/.test(phone.trim())) next.phone = f.errors.phone;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) next.email = f.errors.email;
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -29,6 +37,7 @@ export function ContactForm({ t }: { t: Dictionary }) {
       f.whatsappIntro,
       `${f.whatsappName}: ${name.trim()}`,
       `${f.whatsappPhone}: ${phone.trim()}`,
+      `${f.whatsappEmail}: ${email.trim()}`,
       `${f.whatsappTopic}: ${topic}`,
     ];
     if (message.trim()) lines.push(message.trim());
@@ -48,6 +57,7 @@ export function ContactForm({ t }: { t: Dictionary }) {
         <input
           id="contact-name"
           type="text"
+          required
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={f.namePlaceholder}
@@ -63,6 +73,7 @@ export function ContactForm({ t }: { t: Dictionary }) {
         <input
           id="contact-phone"
           type="tel"
+          required
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder={f.phonePlaceholder}
@@ -72,11 +83,28 @@ export function ContactForm({ t }: { t: Dictionary }) {
       </div>
 
       <div className="space-y-2">
+        <label htmlFor="contact-email" className="block text-sm text-bone">
+          {f.email}
+        </label>
+        <input
+          id="contact-email"
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={f.emailPlaceholder}
+          className={inputClass}
+        />
+        {errors.email && <p className="text-xs text-gold">{errors.email}</p>}
+      </div>
+
+      <div className="space-y-2">
         <label htmlFor="contact-topic" className="block text-sm text-bone">
           {f.topic}
         </label>
         <select
           id="contact-topic"
+          required
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
           className={inputClass}
