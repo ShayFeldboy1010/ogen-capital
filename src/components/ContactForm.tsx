@@ -45,8 +45,10 @@ export function ContactForm({ t }: { t: Dictionary }) {
     window.open(whatsappHref(lines.join("\n")), "_blank", "noopener");
   }
 
+  // [direction:inherit] undoes Chrome's UA rule that forces direction:ltr on
+  // tel inputs, which would left-align that one field inside the RTL form.
   const inputClass =
-    "w-full rounded-xl border border-line bg-ink px-4 py-3 text-sm text-bone placeholder:text-bone-dim/60 focus:border-gold focus:outline-none";
+    "w-full rounded-xl border border-line bg-ink px-4 py-3 text-sm text-bone [direction:inherit] placeholder:text-bone-dim/60 focus:border-gold focus:outline-none";
 
   return (
     <form onSubmit={onSubmit} noValidate className="space-y-5">

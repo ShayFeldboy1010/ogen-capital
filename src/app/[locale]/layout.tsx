@@ -9,6 +9,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { StickyBar } from "@/components/StickyBar";
 import { Analytics } from "@/components/Analytics";
+import { AccessibilityWidget } from "@/components/AccessibilityWidget";
 import "../globals.css";
 
 /*
@@ -101,6 +102,7 @@ export default async function LocaleLayout({
         <Footer locale={locale} t={t} />
         <WhatsAppFab label={t.cta.whatsapp} prefill={t.cta.whatsappPrefill} />
         <StickyBar t={t} />
+        <AccessibilityWidget locale={locale as Locale} />
         <Analytics />
       </body>
     </html>

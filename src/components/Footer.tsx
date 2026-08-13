@@ -26,19 +26,18 @@ export function Footer({ locale, t }: { locale: Locale; t: Dictionary }) {
     <footer className="border-t border-line bg-ink-2/40">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
         <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_2fr]">
-          <div>
+          {/* Brand lockup. Forced LTR so the mark always sits to the left of
+              the Latin wordmark, in Hebrew exactly as in English. */}
+          <div dir="ltr" className="flex items-center gap-3">
             <Image
               src="/mark.png"
               alt=""
               width={594}
               height={636}
-              className="h-16 w-auto"
+              className="h-16 w-auto shrink-0"
             />
-            <p className="mt-4 font-display text-2xl text-gold">
+            <p className="font-display text-2xl text-gold">
               {t.footer.brandLine}
-            </p>
-            <p className="mt-3 max-w-[32ch] text-sm leading-relaxed text-bone-dim">
-              {t.footer.tagline}
             </p>
           </div>
 

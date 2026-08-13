@@ -152,9 +152,9 @@ export const en: Dictionary = {
         image: "/partner-jaguar.jpg",
       },
       {
-        name: "Dobi Flink",
+        name: "Dooby Flink",
         role: "Founding Partner, Crypto Analyst",
-        bio: "Dobi comes from high-tech with deep experience in technological development. As the founder of “Crypto Israeli” and a strategic advisor to blockchain ventures, he reads the market through cold numbers and on-chain data, far from passing trends. Dobi builds capital-allocation strategies based on long-term market cycles and leads the firm's financial assessment, with one clear goal: hedging and investment decisions grounded in solid data rather than emotion.",
+        bio: "Dooby comes from high-tech with deep experience in technological development. As the founder of “Crypto Israeli” and a strategic advisor to blockchain ventures, he reads the market through cold numbers and on-chain data, far from passing trends. Dooby builds capital-allocation strategies based on long-term market cycles and leads the firm's financial assessment, with one clear goal: hedging and investment decisions grounded in solid data rather than emotion.",
         image: "/partner-dobi.jpg",
       },
     ],
@@ -460,7 +460,6 @@ export const en: Dictionary = {
 
   footer: {
     brandLine: "OGen Family Office",
-    tagline: "Stability. Protection. Generations.",
     navTitle: "Navigate",
     legalTitle: "Legal",
     disclaimerLink: "Disclosure & Terms",

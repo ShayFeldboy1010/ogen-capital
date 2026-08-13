@@ -8,25 +8,8 @@ import { List, X } from "@phosphor-icons/react";
 import type { Locale } from "@/lib/i18n";
 import { otherLocale } from "@/lib/i18n";
 import type { Dictionary } from "@/dictionaries";
-import { whatsappHref } from "@/lib/site";
+import { site, whatsappHref } from "@/lib/site";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
-
-/**
- * Wordmark beside the logo, set to match the mark itself: O and G large in
- * metallic gold, "en" small in bone. (Spec section 1.)
- */
-function Wordmark() {
-  return (
-    <span className="font-display leading-none tracking-[0.02em]">
-      <span className="text-gilded text-[1.7rem] font-extrabold md:text-[1.9rem]">
-        OG
-      </span>
-      <span className="text-[1.15rem] font-medium text-bone md:text-[1.3rem]">
-        en
-      </span>
-    </span>
-  );
-}
 
 export function Nav({ locale, t }: { locale: Locale; t: Dictionary }) {
   const [open, setOpen] = useState(false);
@@ -47,16 +30,20 @@ export function Nav({ locale, t }: { locale: Locale; t: Dictionary }) {
       {/* Logo takes the start edge, everything else the end edge — so in Hebrew
           the logo sits right and the menu sits left. (Spec section 1.) */}
       <div className="mx-auto flex h-24 max-w-6xl items-center justify-between px-6">
+        {/* Mark plus the full wordmark, set exactly like the footer lockup.
+            On phones the mark stands alone, there is no room for the words. */}
         <Link href={base} className="flex items-center gap-3">
           <Image
             src="/mark.png"
-            alt=""
+            alt={site.brand}
             width={594}
             height={636}
             className="h-14 w-auto md:h-16"
             priority
           />
-          <Wordmark />
+          <span className="hidden font-display text-2xl leading-none text-gold md:block">
+            {t.footer.brandLine}
+          </span>
         </Link>
 
         <div className="hidden items-center gap-8 lg:flex">

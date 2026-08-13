@@ -89,13 +89,17 @@ export function LeadBand({ t }: { t: Dictionary }) {
                   <label htmlFor="lead-phone" className="sr-only">
                     {f.phone}
                   </label>
+                  {/* Chrome's UA stylesheet forces direction:ltr on tel inputs,
+                      which pushes the placeholder to the left inside an RTL
+                      form. Inherit the page direction so it sits with the name
+                      field. */}
                   <input
                     id="lead-phone"
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder={f.phone}
-                    className="w-full rounded-full border border-line bg-ink px-6 py-4 text-sm text-bone placeholder:text-bone-dim/70 transition-shadow focus:border-gold focus:shadow-[0_0_0_3px_rgba(201,164,92,0.15)] focus:outline-none"
+                    className="w-full rounded-full border border-line bg-ink px-6 py-4 text-sm text-bone [direction:inherit] placeholder:text-bone-dim/70 transition-shadow focus:border-gold focus:shadow-[0_0_0_3px_rgba(201,164,92,0.15)] focus:outline-none"
                   />
                   <button
                     type="submit"
